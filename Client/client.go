@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"net"
+	"os"
+	"strings"
 )
 
 func main() {
@@ -11,6 +14,22 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(connection)
+
+	fmt.Print("Enter your name: ")
+	nameReader := bufio.NewReader(os.Stdin)
+	nameInput, _ := nameReader.ReadString('\n')
+	nameInput = strings.TrimSpace(nameInput) // Trim whitespace including newline
+
+	fmt.Println("Message: ")
+	for {
+		msgReader := bufio.NewReader(os.Stdin)
+		msg, err := msgReader.ReadString('\n')
+		if err != nil {
+			break
+		}
+		msg = fmt.Sprintf("%s: %s\n", nameInput, strings.TrimSpace(msg)) // Trim whitespace including newline
+		connection.Write([]byte(msg))
+	}
+	connection.Close()
 
 }

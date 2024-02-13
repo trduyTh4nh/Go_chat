@@ -1,9 +1,17 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"net"
+)
+
+var (
+	conns   []net.Conn
+	connCh  = make(chan net.Conn)
+	closeCh = make(chan net.Conn)
+	msgCh   = make(chan string)
 )
 
 func main() {
@@ -12,11 +20,44 @@ func main() {
 		log.Fatal(err)
 	}
 
+	go func() {
+		for {
+			conn, err := server.Accept()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			conns = append(conns, conn)
+			connCh <- conn
+
+		}
+	}()
+
 	for {
-		conn, err := server.Accept()
+		select {
+		case conn := <-connCh:
+			go onMessage(conn)
+		case msg := <-msgCh:
+			fmt.Print(msg)
+		case conn := <-closeCh:
+			fmt.Println("Client exit", conn)
+			// removeConn(conn)
+		}
+	}
+
+}
+
+func onMessage(conn net.Conn) {
+	for {
+		reader := bufio.NewReader(conn)
+		msg, err := reader.ReadString('\n')
 		if err != nil {
 			log.Fatal(err)
+			break
 		}
-		fmt.Println("New client", conn)
+
+		msgCh <- msg
+
 	}
+	closeCh <- conn
 }
