@@ -20,6 +20,7 @@ func main() {
 	nameInput, _ := nameReader.ReadString('\n')
 	nameInput = strings.TrimSpace(nameInput)
 
+	go onMessage(connection)
 	fmt.Println("Message: ")
 	for {
 		msgReader := bufio.NewReader(os.Stdin)
@@ -32,4 +33,12 @@ func main() {
 	}
 	connection.Close()
 
+}
+
+func onMessage(conn net.Conn) {
+	for {
+		reader := bufio.NewReader(conn)
+		msg, _ := reader.ReadString('\n')
+		fmt.Print(msg)
+	}
 }

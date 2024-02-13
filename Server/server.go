@@ -41,7 +41,7 @@ func main() {
 			fmt.Print(msg)
 		case conn := <-closeCh:
 			fmt.Println("Client exit", conn)
-			// removeConn(conn)
+			removeConn(conn)
 		}
 	}
 
@@ -57,7 +57,26 @@ func onMessage(conn net.Conn) {
 		}
 
 		msgCh <- msg
+		publishMsg(conn, msg)
 
 	}
 	closeCh <- conn
+}
+
+func removeConn(conn net.Conn) {
+	var i int
+	for i = range conns {
+		if conns[i] == conn {
+			break
+		}
+	}
+	conns = append(conns[i:], conns[:i+1]...)
+}
+
+func publishMsg(conn net.Conn, msg string) {
+	for i := range conns {
+		if conns[i] != conn {
+			conns[i].Write([]byte(msg))
+		}
+	}
 }
