@@ -18,7 +18,7 @@ func main() {
 	fmt.Print("Enter your name: ")
 	nameReader := bufio.NewReader(os.Stdin)
 	nameInput, _ := nameReader.ReadString('\n')
-	nameInput = strings.TrimSpace(nameInput) // Trim whitespace including newline
+	nameInput = strings.TrimSpace(nameInput)
 
 	fmt.Println("Message: ")
 	for {
@@ -27,7 +27,7 @@ func main() {
 		if err != nil {
 			break
 		}
-		msg = fmt.Sprintf("%s: %s\n", nameInput, strings.TrimSpace(msg)) // Trim whitespace including newline
+		msg = fmt.Sprintf("%s: %s\n", nameInput, strings.TrimSpace(msg))
 		connection.Write([]byte(msg))
 	}
 	connection.Close()
