@@ -15,6 +15,7 @@ var (
 )
 
 func main() {
+	fmt.Println("====================START TRACKING====================")
 	server, err := net.Listen("tcp", ":3000")
 	if err != nil {
 		log.Fatal(err)
@@ -55,7 +56,6 @@ func onMessage(conn net.Conn) {
 			log.Fatal(err)
 			break
 		}
-
 		msgCh <- msg
 		publishMsg(conn, msg)
 
