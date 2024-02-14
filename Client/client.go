@@ -65,6 +65,7 @@ func onMessage(conn net.Conn) {
 	for {
 		fmt.Print("Chat: ")
 		reader := bufio.NewReader(conn)
+
 		msg, _ := reader.ReadString('\n')
 		fmt.Print(msg)
 	}
