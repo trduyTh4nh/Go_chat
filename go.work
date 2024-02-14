@@ -1,3 +1,6 @@
 go 1.21.6
 
-use ./TestChatGPT
+use ./Chat_bot
+use ./Client
+use ./Server
+
